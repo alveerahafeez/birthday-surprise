@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday!</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', cursive;
+      background: #1a1a2e;
+      color: #fff;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    .container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #ff6f61;
+      margin-bottom: 20px;
+    }
+
+    .start-btn, #slideshow-btn {
+      padding: 12px 25px; /* slightly smaller */
+      font-size: 0.9em;
+      background-color: #0f3460;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: transform 0.2s;
+      margin-top: 10px;
+    }
+
+    .start-btn:hover, #slideshow-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .message {
+      display: none;
+      margin-top: 20px;
+      font-size: 0.9em;
+      line-height: 1.4em;
+      max-width: 80%;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 2em;
+      color: #ff3c3c;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    #slideshow {
+      display: none;
+      margin-top: 20px;
+      max-width: 60%; /* reduced size */
+      height: auto;
+      position: relative;
+    }
+
+    #slide-img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    #final-msg {
+      display: none;
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #ffb347;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Music -->
+  <audio id="bg-music" loop>
+    <source src="Kina Chir - The Prophec.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Pop Sound Effect -->
+  <audio id="pop-sound">
+    <source src="pop-sound.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <h1>🎮 Crack your Achievement 🎉</h1>
+    <button class="start-btn">Press Start</button>
+
+    <div class="message">
+      <p>HAPPY BIRTHDAY PRABH❤️</p>
+      <p>You are the only player I wish to play with!</p>
+      <p>You are the only player I wish to watch playing!</p>
+      <p>You are the love of my life and my only happiness</p>
+      <p>Your birthday is a blessing for me and I can't imagine my life without you</p>
+      <p>I wish I could be there. Lots of hugs and kisses! I love you sooooo much!!!!!</p>
+    </div>
+
+    <button id="slideshow-btn">Click for More</button>
+    <div id="slideshow">
+      <img id="slide-img" src="image1.jpg">
+    </div>
+
+    <div id="final-msg">I love you Prabh ❤️</div>
+  </div>
+
+  <script>
+    const btn = document.querySelector('.start-btn');
+    const msg = document.querySelector('.message');
+    const bgMusic = document.getElementById('bg-music');
+    const popSound = document.getElementById('pop-sound');
+    const slideshowBtn = document.getElementById('slideshow-btn');
+    const slideshow = document.getElementById('slideshow');
+    const slideImg = document.getElementById('slide-img');
+    const finalMsg = document.getElementById('final-msg');
+
+    const totalHeartsToPop = 20;
+    let poppedHearts = 0;
+
+    // Slideshow setup
+    const images = ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg']; // your images
+    let currentIndex = 0;
+    let slideshowInterval;
+
+    slideshowBtn.style.display = 'none';
+
+    btn.addEventListener('click', () => {
+      btn.style.display = 'none';
+      bgMusic.play();
+      startGame();
+    });
+
+    function startGame() {
+      const heartInterval = setInterval(() => {
+        createHeart();
+      }, 1200);
+
+      function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerText = '❤️';
+        heart.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+        heart.style.top = window.innerHeight + 'px';
+        heart.style.fontSize = 25 + Math.random() * 25 + 'px';
+        document.body.appendChild(heart);
+
+        const speed = 0.8 + Math.random() * 1.2;
+        function floatUp() {
+          let top = parseFloat(heart.style.top);
+          if (top < -50) {
+            heart.remove();
+          } else {
+            heart.style.top = top - speed + 'px';
+            requestAnimationFrame(floatUp);
+          }
+        }
+        floatUp();
+
+        heart.addEventListener('click', () => {
+          popSound.currentTime = 0;
+          popSound.play();
+          heart.style.transform = 'scale(2)';
+          heart.style.opacity = '0';
+          setTimeout(() => heart.remove(), 200);
+          poppedHearts++;
+          if (poppedHearts >= totalHeartsToPop) {
+            clearInterval(heartInterval);
+            showMessage();
+          }
+        });
+      }
+    }
+
+    function showMessage() {
+      msg.style.display = 'block';
+      setTimeout(() => {
+        slideshowBtn.style.display = 'inline-block';
+      }, 8000); // 1 minute delay
+    }
+
+    slideshowBtn.addEventListener('click', () => {
+      slideshowBtn.style.display = 'none';
+      slideshow.style.display = 'block';
+      slideshowInterval = setInterval(() => {
+        currentIndex++;
+        if (currentIndex >= images.length) {
+          clearInterval(slideshowInterval);
+          slideshow.style.display = 'none';
+          finalMsg.style.display = 'block';
+        } else {
+          slideImg.src = images[currentIndex];
+        }
+      }, 4000); // 3 seconds per slide
+    });
+  </script>
+</body>
+</html>
